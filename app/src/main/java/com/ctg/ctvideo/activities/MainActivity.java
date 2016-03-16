@@ -45,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void toHomepage(View view) {
+        Intent intent = new Intent(this, HomepageActivity.class);
+        startActivity(intent);
+    }
+
     public void toFileExplorer(View view) {
         Intent intent = new Intent(this, FileExplorerActivity.class);
         startActivity(intent);
