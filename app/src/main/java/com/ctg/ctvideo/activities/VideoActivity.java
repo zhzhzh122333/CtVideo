@@ -70,8 +70,18 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         return intent;
     }
 
+    public static Intent newIntent(Context context, Bundle bundle) {
+        Intent intent = new Intent(context, VideoActivity.class);
+        intent.putExtras(bundle);
+        return intent;
+    }
+
     public static void intentTo(Context context, String videoPath, String videoTitle) {
         context.startActivity(newIntent(context, videoPath, videoTitle));
+    }
+
+    public static void intentTo(Context context, Bundle bundle) {
+        context.startActivity(newIntent(context, bundle));
     }
 
     @Override

@@ -6,14 +6,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.util.LruCache;
-import android.view.View;
 import android.widget.GridView;
 
 import com.ctg.ctvideo.R;
 import com.ctg.ctvideo.adapter.HomepageAdapter;
 import com.ctg.ctvideo.model.Video;
+import com.ctg.ctvideo.services.NetworkService;
 
 import org.json.JSONObject;
 
@@ -49,7 +48,7 @@ public class HomepageActivity extends AppCompatActivity {
             public void run() {
                 try {
 
-                    JSONObject json = new JSONObject(getTextWithJson("http://www.bilibili.com/index/ding.json"));
+                    JSONObject json = NetworkService.getJsonByUrl("http://www.bilibili.com/index/ding.json");
                     videos = new ArrayList<Video>();
 
                     String[] names = {"douga", "music", "game", "ent", "teleplay", "bangumi", "movie", "technology", "kichiku", "dance", "fashion"};
@@ -59,6 +58,7 @@ public class HomepageActivity extends AppCompatActivity {
                             JSONObject item = row.getJSONObject(String.valueOf(i));
                             Video v = new Video();
                             v.url = "http://cttest.cachenow.net/dash.mp4";
+//                            v.url = "http://59.120.43.180:17355";
                             v.title = item.getString("title");
                             v.pic = item.getString("pic");
                             videos.add(v);
@@ -82,27 +82,6 @@ public class HomepageActivity extends AppCompatActivity {
             mPhotoWall.setAdapter(adapter);
         }
     };
-
-    public static String getTextWithJson(String path) {
-        try {
-            URL url = new URL(path);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.connect();
-            InputStream in = conn.getInputStream();
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            int temp;
-            while ((temp = in.read()) != -1) {
-                out.write(temp);
-            }
-            in.close();
-
-            return out.toString();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return "{}";
-        }
-    }
 
     @Override
     protected void onDestroy() {

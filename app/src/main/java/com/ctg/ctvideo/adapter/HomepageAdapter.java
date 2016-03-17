@@ -14,6 +14,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ctg.ctvideo.R;
 import com.ctg.ctvideo.activities.HomepageActivity;
@@ -94,8 +95,14 @@ public class HomepageAdapter extends ArrayAdapter<Video> implements OnScrollList
         final ImageView photo = (ImageView) view.findViewById(R.id.homepage_images);
         // 给ImageView设置一个Tag，保证异步加载图片时不会乱序
         photo.setTag(v.pic);
+        setImageView(v.pic, photo);
+
+        // 设置标题
+        final TextView title = (TextView) view.findViewById(R.id.homepage_titles);
+        title.setText(v.title);
+
         // 设置点击动作
-        photo.setOnClickListener(new View.OnClickListener() {
+        view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 System.out.println(v.pic);
@@ -108,7 +115,7 @@ public class HomepageAdapter extends ArrayAdapter<Video> implements OnScrollList
                 VideoActivity.intentTo(getContext(), v.url, v.title);
             }
         });
-        setImageView(v.pic, photo);
+
         return view;
     }
 
