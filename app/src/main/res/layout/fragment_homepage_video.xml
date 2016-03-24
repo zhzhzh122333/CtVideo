@@ -4,18 +4,18 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/homepage_images"
-        android:layout_width="140dp"
-        android:layout_height="90dp"
+        android:id="@+id/homepage_video_images"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
         android:layout_gravity="center"
         android:scaleType="fitXY"
         android:src="@drawable/ic_action_dark_aspect_ratio" />
     <TextView
-        android:id="@+id/homepage_titles"
-        android:layout_width="140dp"
-        android:layout_height="36dp"
+        android:id="@+id/homepage_video_titles"
+        android:layout_width="100dp"
+        android:layout_height="19dp"
         android:layout_gravity="center"
-        android:text="HelloWorldHelloWorldHelloWorldHelloWorldHelloWorldHelloWorldHelloWorldHelloWorld"
+        android:text="正在加载中"
         android:textAlignment="center" />
 
 </LinearLayout>

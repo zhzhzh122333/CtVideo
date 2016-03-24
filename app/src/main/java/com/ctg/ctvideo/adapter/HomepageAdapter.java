@@ -17,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ctg.ctvideo.R;
-import com.ctg.ctvideo.activities.HomepageActivity;
 import com.ctg.ctvideo.activities.VideoActivity;
 import com.ctg.ctvideo.model.Video;
 
@@ -88,17 +87,17 @@ public class HomepageAdapter extends ArrayAdapter<Video> implements OnScrollList
         final Video v = getItem(position);
         View view;
         if (convertView == null) {
-            view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_homepage_images, null);
+            view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_homepage_video, null);
         } else {
             view = convertView;
         }
-        final ImageView photo = (ImageView) view.findViewById(R.id.homepage_images);
+        final ImageView photo = (ImageView) view.findViewById(R.id.homepage_video_images);
         // 给ImageView设置一个Tag，保证异步加载图片时不会乱序
         photo.setTag(v.pic);
         setImageView(v.pic, photo);
 
         // 设置标题
-        final TextView title = (TextView) view.findViewById(R.id.homepage_titles);
+        final TextView title = (TextView) view.findViewById(R.id.homepage_video_titles);
         title.setText(v.title);
 
         // 设置点击动作
