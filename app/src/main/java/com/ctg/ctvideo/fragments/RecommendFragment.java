@@ -8,10 +8,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.GridView;
+import android.widget.ListView;
 
 import com.ctg.ctvideo.R;
-import com.ctg.ctvideo.adapter.HomepageAdapter;
+import com.ctg.ctvideo.adapter.CategoryListAdapter;
+import com.ctg.ctvideo.model.Category;
 import com.ctg.ctvideo.model.Video;
 import com.ctg.ctvideo.services.CtVideoService;
 
@@ -22,17 +23,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RecommendFragment extends Fragment {
-    private List<Video> videos;
+    private List<Category> categories;
 
-    /**
-     * 用于展示照片墙的GridView
-     */
-    private GridView mPhotoWall;
+    private ListView categoryView;
 
-    /**
-     * GridView的适配器
-     */
-    private HomepageAdapter adapter;
+    private CategoryListAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,19 +37,37 @@ public class RecommendFragment extends Fragment {
             public void run() {
                 try {
                     CtVideoService.login("admin", "gsta123");
-                    JSONObject json = CtVideoService.getVodList();
+                    JSONObject result = CtVideoService.getVodList();
 
-                    videos = new ArrayList<Video>();
-                    JSONArray vodList = json.optJSONObject("Response").optJSONArray("vod_list");
-                    for (int i = 0; i < vodList.length(); i++) {
-                        JSONObject item = vodList.optJSONObject(i);
-                        Video v = new Video();
-                        v.url =  "http://cttest.cachenow.net/dash.mp4";
-                        v.title = item.optString("title");
-                        v.pic = item.optString("img");
-                        videos.add(v);
+                    // 分类个数
+                    int count = result.optInt("count");
+
+                    categories = new ArrayList<Category>();
+
+                    for (int i = 0; i < count; i++) {
+
+                        JSONObject ca = result.getJSONObject(String.valueOf(i));
+                        Category category = new Category();
+                        category.setTitle("".equals(ca.optString("category")) ? "综合" : ca.optString("category"));
+
+                        JSONArray vodList = ca.optJSONArray("vod_list");
+                        List<Video> videos = new ArrayList<Video>();
+                        for (int j = 0; j < 9; j++) {
+                            if (i > vodList.length()) {
+                                break;
+                            }
+
+                            Video video = new Video();
+                            JSONObject v = vodList.getJSONObject(j);
+                            video.title = v.optString("title");
+                            video.url = "http://59.120.43.180:17355";
+                            video.pic = v.optString("img");
+                            videos.add(video);
+                        }
+                        category.setVodList(videos);
+                        categories.add(category);
                     }
-                    imageHandler.sendEmptyMessage(0);
+                    videoListHandler.sendEmptyMessage(0);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -64,19 +77,15 @@ public class RecommendFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        System.out.println("OnCreateView");
         return inflater.inflate(R.layout.fragment_homepage_recommend, null);
     }
 
-    /**
-     * 加载图片
-     */
-    private Handler imageHandler = new Handler() {
+    private Handler videoListHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            mPhotoWall = (GridView) RecommendFragment.this.getActivity().findViewById(R.id.homepage_recommend);
-            adapter = new HomepageAdapter(RecommendFragment.this.getContext(), 0, videos, mPhotoWall);
-            mPhotoWall.setAdapter(adapter);
+            adapter = new CategoryListAdapter(RecommendFragment.this.getContext(), 0, categories);
+            categoryView = (ListView) RecommendFragment.this.getActivity().findViewById(R.id.homepage_recommend_list);
+            categoryView.setAdapter(adapter);
         }
     };
 

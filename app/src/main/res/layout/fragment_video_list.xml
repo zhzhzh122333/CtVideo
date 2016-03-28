@@ -1,0 +1,24 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#d2d2d2">
+
+    <TextView
+        android:id="@+id/video_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="综合"/>
+    <GridView
+        android:id="@+id/video_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="580dp"
+        android:columnWidth="100dp"
+        android:stretchMode="columnWidth"
+        android:numColumns="auto_fit"
+        android:verticalSpacing="10dp"
+        android:padding="5dp"
+        android:gravity="center">
+    </GridView>
+</LinearLayout>
