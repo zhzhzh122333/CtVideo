@@ -11,6 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.ctg.ctvideo.R;
+import com.ctg.ctvideo.services.CtVideoService;
+import com.ctg.ctvideo.services.NetworkService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,5 +55,14 @@ public class MainActivity extends AppCompatActivity {
     public void toFileExplorer(View view) {
         Intent intent = new Intent(this, FileExplorerActivity.class);
         startActivity(intent);
+    }
+
+    public void throwVideo(View view) {
+        new Thread() {
+            public void run() {
+                String result = CtVideoService.throwVideo("e3bf8f2fa62911e5b690a5558c170839");
+                System.out.println(result);
+            }
+        }.start();
     }
 }

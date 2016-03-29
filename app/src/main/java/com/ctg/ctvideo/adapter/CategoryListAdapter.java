@@ -10,20 +10,15 @@ import android.widget.TextView;
 
 import com.ctg.ctvideo.R;
 import com.ctg.ctvideo.model.Category;
+import com.ctg.ctvideo.services.BitmapWorker;
 import com.ctg.ctvideo.services.BitmapWorkerService;
 
 import java.util.List;
 
 public class CategoryListAdapter extends ArrayAdapter<Category> {
 
-    /**
-     * 异步加载图片
-     */
-    private BitmapWorkerService bitmapWorkerService;
-
     public CategoryListAdapter(Context context, int textViewResourceId, List<Category> categories) {
         super(context, textViewResourceId, categories);
-        this.bitmapWorkerService = new BitmapWorkerService();
     }
 
     @Override
@@ -41,7 +36,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
         title.setText(ca.getTitle());
 
         // 设置视频列表
-        VideoListAdapter adapter = new VideoListAdapter(CategoryListAdapter.this.getContext(), 0, ca.getVodList(), bitmapWorkerService);
+        VideoListAdapter adapter = new VideoListAdapter(CategoryListAdapter.this.getContext(), 0, ca.getVodList());
         final GridView gridView = (GridView) view.findViewById(R.id.video_list_view);
         gridView.setAdapter(adapter);
 
@@ -52,7 +47,7 @@ public class CategoryListAdapter extends ArrayAdapter<Category> {
      * 取消所有正在下载或等待下载的任务。
      */
     public void cancelAllTasks() {
-        bitmapWorkerService.cancelAllTasks();
+        BitmapWorkerService.cancelAllTasks();
     }
 
 }

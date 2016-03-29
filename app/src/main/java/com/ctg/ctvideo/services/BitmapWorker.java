@@ -16,19 +16,19 @@ import java.util.Set;
 /**
  * 负责异步从网络上下载图片。
  */
-public class BitmapWorkerService {
+public class BitmapWorker {
 
     /**
      * 记录所有正在下载或等待下载的任务。
      */
-    private static Set<BitmapWorkerTask> taskCollection;
+    private Set<BitmapWorkerTask> taskCollection;
 
     /**
      * 图片缓存技术的核心类，用于缓存所有下载好的图片，在程序内存达到设定值时会将最少最近使用的图片移除掉。
      */
-    private static LruCache<String, Bitmap> mMemoryCache;
+    private LruCache<String, Bitmap> mMemoryCache;
 
-    static {
+    public BitmapWorker() {
         taskCollection = new HashSet<BitmapWorkerTask>();
 
         // 获取应用程序最大可用内存
@@ -51,7 +51,7 @@ public class BitmapWorkerService {
      * @param imageUrl  图片的URL地址，用于作为LruCache的键。
      * @param imageView 用于显示图片的控件。
      */
-    public static void setImageView(String imageUrl, ImageView imageView) {
+    public void setImageView(String imageUrl, ImageView imageView) {
         Bitmap bitmap = getBitmapFromMemoryCache(imageUrl);
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
@@ -70,7 +70,7 @@ public class BitmapWorkerService {
      * @param key    LruCache的键，这里传入图片的URL地址。
      * @param bitmap LruCache的键，这里传入从网络上下载的Bitmap对象。
      */
-    public static void addBitmapToMemoryCache(String key, Bitmap bitmap) {
+    public void addBitmapToMemoryCache(String key, Bitmap bitmap) {
         if (getBitmapFromMemoryCache(key) == null) {
             mMemoryCache.put(key, bitmap);
         }
@@ -82,14 +82,14 @@ public class BitmapWorkerService {
      * @param key LruCache的键，这里传入图片的URL地址。
      * @return 对应传入键的Bitmap对象，或者null。
      */
-    public static Bitmap getBitmapFromMemoryCache(String key) {
+    public Bitmap getBitmapFromMemoryCache(String key) {
         return mMemoryCache.get(key);
     }
 
     /**
      * 取消所有正在下载或等待下载的任务。
      */
-    public static void cancelAllTasks() {
+    public void cancelAllTasks() {
         if (taskCollection != null) {
             for (BitmapWorkerTask task : taskCollection) {
                 task.cancel(false);
@@ -100,7 +100,7 @@ public class BitmapWorkerService {
     /**
      * 异步下载图片的任务。
      */
-    static class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
+    class BitmapWorkerTask extends AsyncTask<String, Void, Bitmap> {
 
         /**
          * 图片的URL地址

@@ -1,6 +1,7 @@
 package com.ctg.ctvideo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,19 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ctg.ctvideo.R;
-import com.ctg.ctvideo.activities.VideoActivity;
+import com.ctg.ctvideo.activities.VideoInfoActivity;
 import com.ctg.ctvideo.model.Video;
+import com.ctg.ctvideo.services.BitmapWorker;
 import com.ctg.ctvideo.services.BitmapWorkerService;
 
 import java.util.List;
 
 public class VideoListAdapter extends ArrayAdapter<Video> {
 
-    private BitmapWorkerService bitmapWorkerService;
-
-    public VideoListAdapter(Context context, int textViewResourceId, List<Video> videos, BitmapWorkerService bitmapWorkerService) {
+    public VideoListAdapter(Context context, int textViewResourceId, List<Video> videos) {
         super(context, textViewResourceId, videos);
-        this.bitmapWorkerService = bitmapWorkerService;
     }
 
     @Override
@@ -39,7 +38,7 @@ public class VideoListAdapter extends ArrayAdapter<Video> {
         final ImageView img = (ImageView) view.findViewById(R.id.video_item_img);
         // 给ImageView设置一个Tag，保证异步加载图片时不会乱序
         img.setTag(v.pic);
-        bitmapWorkerService.setImageView(v.pic, img);
+        BitmapWorkerService.setImageView(v.pic, img);
 
         // 设置标题
         final TextView title = (TextView) view.findViewById(R.id.video_item_title);
@@ -52,10 +51,15 @@ public class VideoListAdapter extends ArrayAdapter<Video> {
 
                 Bundle bundle = new Bundle();
                 bundle.putString("videoPath", v.url);
-                bundle.putString("videoTitle", "video");
+                bundle.putString("videoTitle", v.title);
                 bundle.putInt("startTime", 0);
+                bundle.putString("videoImage", v.pic);
 
-                VideoActivity.intentTo(getContext(), v.url, v.title);
+                Intent intent = new Intent(getContext(), VideoInfoActivity.class);
+                intent.putExtras(bundle);
+                getContext().startActivity(intent);
+
+//                VideoActivity.intentTo(getContext(), v.url, v.title);
             }
         });
 
