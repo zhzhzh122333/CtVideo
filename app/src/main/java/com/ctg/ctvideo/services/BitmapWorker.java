@@ -56,7 +56,7 @@ public class BitmapWorker {
         if (bitmap != null) {
             imageView.setImageBitmap(bitmap);
         } else {
-            imageView.setImageResource(R.drawable.ic_action_dark_aspect_ratio);
+            imageView.setImageResource(R.drawable.ic_image);
 
             BitmapWorkerTask task = new BitmapWorkerTask(imageUrl, imageView);
             taskCollection.add(task);

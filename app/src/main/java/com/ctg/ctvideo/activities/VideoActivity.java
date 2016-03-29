@@ -63,9 +63,9 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private Settings mSettings;
     private boolean mBackPressed;
 
-    public static Intent newIntent(Context context, String videoPath, String videoTitle) {
+    public static Intent newIntent(Context context, String videoUrl, String videoTitle) {
         Intent intent = new Intent(context, VideoActivity.class);
-        intent.putExtra("videoPath", videoPath);
+        intent.putExtra("videoUrl", videoUrl);
         intent.putExtra("videoTitle", videoTitle);
         return intent;
     }
@@ -76,8 +76,8 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         return intent;
     }
 
-    public static void intentTo(Context context, String videoPath, String videoTitle) {
-        context.startActivity(newIntent(context, videoPath, videoTitle));
+    public static void intentTo(Context context, String videoUrl, String videoTitle) {
+        context.startActivity(newIntent(context, videoUrl, videoTitle));
     }
 
     public static void intentTo(Context context, Bundle bundle) {
@@ -92,7 +92,7 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mSettings = new Settings(this);
 
         // handle arguments
-        mVideoPath = getIntent().getStringExtra("videoPath");
+        mVideoPath = getIntent().getStringExtra("videoUrl");
 
         Intent intent = getIntent();
         String intentAction = intent.getAction();

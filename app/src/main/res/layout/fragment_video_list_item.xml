@@ -9,7 +9,7 @@
         android:layout_height="150dp"
         android:layout_gravity="center"
         android:scaleType="fitXY"
-        android:src="@drawable/ic_action_dark_aspect_ratio" />
+        android:src="@drawable/ic_image" />
     <TextView
         android:id="@+id/video_item_title"
         android:layout_width="100dp"

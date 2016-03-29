@@ -61,7 +61,10 @@ public class RecommendFragment extends Fragment {
                             JSONObject v = vodList.getJSONObject(j);
                             video.title = v.optString("title");
                             video.url = "http://59.120.43.180:17355";
-                            video.pic = v.optString("img");
+                            video.img = v.optString("img");
+                            video.type = v.optString("content_type");
+                            video.category = v.optString("category");
+                            video.description = v.optString("content_desc");
                             videos.add(video);
                         }
                         category.setVodList(videos);

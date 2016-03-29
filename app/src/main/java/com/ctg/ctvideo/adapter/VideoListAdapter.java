@@ -37,8 +37,8 @@ public class VideoListAdapter extends ArrayAdapter<Video> {
 
         final ImageView img = (ImageView) view.findViewById(R.id.video_item_img);
         // 给ImageView设置一个Tag，保证异步加载图片时不会乱序
-        img.setTag(v.pic);
-        BitmapWorkerService.setImageView(v.pic, img);
+        img.setTag(v.img);
+        BitmapWorkerService.setImageView(v.img, img);
 
         // 设置标题
         final TextView title = (TextView) view.findViewById(R.id.video_item_title);
@@ -50,10 +50,13 @@ public class VideoListAdapter extends ArrayAdapter<Video> {
             public void onClick(View view) {
 
                 Bundle bundle = new Bundle();
-                bundle.putString("videoPath", v.url);
+                bundle.putString("videoUrl", v.url);
                 bundle.putString("videoTitle", v.title);
+                bundle.putString("videoImg", v.img);
+                bundle.putString("videoType", v.type);
+                bundle.putString("videoCategory", v.category);
+                bundle.putString("videoDescription", v.description);
                 bundle.putInt("startTime", 0);
-                bundle.putString("videoImage", v.pic);
 
                 Intent intent = new Intent(getContext(), VideoInfoActivity.class);
                 intent.putExtras(bundle);
