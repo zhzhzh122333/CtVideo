@@ -34,6 +34,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -59,6 +60,11 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
     private TableLayout mHudView;
     private DrawerLayout mDrawerLayout;
     private ViewGroup mRightDrawer;
+
+    /**
+     * 广告
+     */
+    private FrameLayout mVideoAd;
 
     private Settings mSettings;
     private boolean mBackPressed;
@@ -149,6 +155,15 @@ public class VideoActivity extends AppCompatActivity implements TracksFragment.I
         mVideoView = (IjkVideoView) findViewById(R.id.video_view);
         mVideoView.setMediaController(mMediaController);
         mVideoView.setHudView(mHudView);
+
+        // 设置广告
+        mVideoAd = (FrameLayout) findViewById(R.id.video_ad);
+        mVideoView.setVideoAd(mVideoAd);
+        mVideoView.addVideoAdTask(0, "http://www.pp3.cn/uploads/allimg/111110/15563RI9-7.jpg");
+        mVideoView.addVideoAdTask(10000, intent.getStringExtra("videoImg"));
+        mVideoView.addVideoAdTask(20000, "http://photo.enterdesk.com/2011-2-16/enterdesk.com-1AA0C93EFFA51E6D7EFE1AE7B671951F.jpg");
+        mVideoView.addVideoAdTask(15000, "https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superman/img/logo/bd_logo1_31bdc765.png");
+
         // prefer mVideoPath
         if (mVideoPath != null)
             mVideoView.setVideoPath(mVideoPath);

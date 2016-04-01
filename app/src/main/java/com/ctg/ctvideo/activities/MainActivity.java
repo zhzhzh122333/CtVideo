@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import com.ctg.ctvideo.R;
 import com.ctg.ctvideo.services.CtVideoService;
 import com.ctg.ctvideo.services.NetworkService;
+import com.ctg.ctvideo.services.PasswordUtils;
+
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,5 +67,21 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(result);
             }
         }.start();
+    }
+
+    public void test(View view) {
+        String s = new String("abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890~!@#$%^&*()_+");
+        System.out.println("原始：" + s);
+        System.out.println("MD5后：" + PasswordUtils.encryptMD5(s));
+        System.out.println("加密的：" + PasswordUtils.encryptDES(s));
+        System.out.println("解密的：" + PasswordUtils.decryptDES(PasswordUtils.encryptDES(s)));
+        System.out.println(s.equals(PasswordUtils.decryptDES(PasswordUtils.encryptDES(s))));
+        System.out.println("加密的：" + PasswordUtils.encrypt3DES(s));
+        System.out.println("解密的：" + PasswordUtils.decrypt3DES(PasswordUtils.encrypt3DES(s)));
+        System.out.println(s.equals(PasswordUtils.decrypt3DES(PasswordUtils.encrypt3DES(s))));
+
+        byte[] b1 = s.getBytes();
+        byte[] b2 = PasswordUtils.hexToByte(PasswordUtils.toHexString(b1));
+        System.out.println(Arrays.equals(b1, b2));
     }
 }

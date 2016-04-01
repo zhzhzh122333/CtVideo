@@ -33,9 +33,9 @@ public class BitmapWorkerService {
 
         // 获取应用程序最大可用内存
         int maxMemory = (int) Runtime.getRuntime().maxMemory();
-        int cacheSize = maxMemory / 6;
+        int cacheSize = maxMemory / 5;
 
-        // 设置图片缓存大小为程序最大可用内存的1/6
+        // 设置图片缓存大小为程序最大可用内存的1/5
         mMemoryCache = new LruCache<String, Bitmap>(cacheSize) {
             @Override
             protected int sizeOf(String key, Bitmap bitmap) {
@@ -52,16 +52,86 @@ public class BitmapWorkerService {
      * @param imageView 用于显示图片的控件。
      */
     public static void setImageView(String imageUrl, ImageView imageView) {
-        Bitmap bitmap = getBitmapFromMemoryCache(imageUrl);
-        if (bitmap != null) {
-            imageView.setImageBitmap(bitmap);
-        } else {
+        if (imageUrl == null) {
             imageView.setImageResource(R.drawable.ic_image);
+        } else {
+            Bitmap bitmap = getBitmapFromMemoryCache(imageUrl);
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap);
+            } else {
+                imageView.setImageResource(R.drawable.ic_image);
 
-            BitmapWorkerTask task = new BitmapWorkerTask(imageUrl, imageView);
-            taskCollection.add(task);
-            task.execute();
+                BitmapWorkerTask task = new BitmapWorkerTask(imageUrl, imageView);
+                taskCollection.add(task);
+                task.execute();
+            }
         }
+    }
+
+    /**
+     * 同步方式获取图片bitmap，若失败返回null
+     *
+     * @param imageUrl
+     */
+    public static Bitmap getImageBitmap(String imageUrl) {
+        if (imageUrl != null) {
+            Bitmap bitmap = getBitmapFromMemoryCache(imageUrl);
+            if (bitmap != null) {
+                return bitmap;
+            } else {
+                bitmap = downloadBitmap(imageUrl);
+                if (bitmap != null) {
+                    // 图片下载完成后缓存到LrcCache中
+                    addBitmapToMemoryCache(imageUrl, bitmap);
+                    return bitmap;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 预载图片，下载图片并保存到缓存
+     *
+     * @param imageUrl
+     */
+    public static void preloadImage(String imageUrl) {
+        if (imageUrl != null) {
+            Bitmap bitmap = getBitmapFromMemoryCache(imageUrl);
+            if (bitmap == null) {
+                BitmapWorkerTask task = new BitmapWorkerTask(imageUrl, null);
+                taskCollection.add(task);
+                task.execute();
+            }
+        }
+    }
+
+    /**
+     * 建立HTTP请求，并获取Bitmap对象。
+     *
+     * @return 解析后的Bitmap对象
+     */
+    public static Bitmap downloadBitmap(String imageUrl) {
+        Bitmap bitmap = null;
+        HttpURLConnection con = null;
+        try {
+            URL url = new URL(imageUrl);
+            con = (HttpURLConnection) url.openConnection();
+            con.setConnectTimeout(10 * 1000);
+            con.setReadTimeout(20 * 1000);
+            con.setDoInput(true);
+//            con.setDoOutput(true);
+
+            con.connect();
+            bitmap = BitmapFactory.decodeStream(con.getInputStream());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (con != null) {
+                con.disconnect();
+            }
+        }
+        return bitmap;
     }
 
     /**
@@ -117,7 +187,7 @@ public class BitmapWorkerService {
         @Override
         protected Bitmap doInBackground(String... params) {
             // 在后台开始下载图片
-            Bitmap bitmap = downloadBitmap();
+            Bitmap bitmap = downloadBitmap(imageUrl);
             if (bitmap != null) {
                 // 图片下载完成后缓存到LrcCache中
                 addBitmapToMemoryCache(imageUrl, bitmap);
@@ -134,34 +204,6 @@ public class BitmapWorkerService {
             }
             taskCollection.remove(this);
         }
-
-        /**
-         * 建立HTTP请求，并获取Bitmap对象。
-         *
-         * @return 解析后的Bitmap对象
-         */
-        private Bitmap downloadBitmap() {
-            Bitmap bitmap = null;
-            HttpURLConnection con = null;
-            try {
-                URL url = new URL(imageUrl);
-                con = (HttpURLConnection) url.openConnection();
-                con.setConnectTimeout(10 * 1000);
-                con.setReadTimeout(20 * 1000);
-                con.setDoInput(true);
-//                con.setDoOutput(true);
-                con.connect();
-                bitmap = BitmapFactory.decodeStream(con.getInputStream());
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (con != null) {
-                    con.disconnect();
-                }
-            }
-            return bitmap;
-        }
-
     }
 
 }

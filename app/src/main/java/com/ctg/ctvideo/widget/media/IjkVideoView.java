@@ -114,6 +114,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
 
     private InfoHudViewHolder mHudViewHolder;
 
+    /**
+     * 广告
+     */
+    private VideoAdHolder mVideoAdHolder;
+
     public IjkVideoView(Context context) {
         super(context);
         initVideoView(context);
@@ -224,6 +229,23 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
     }
 
     /**
+     * 设置广告
+     * @param frameLayout
+     */
+    public void setVideoAd(FrameLayout frameLayout) {
+        mVideoAdHolder = new VideoAdHolder(IjkVideoView.this, frameLayout);
+    }
+
+    /**
+     * 添加广告
+     * @param time
+     * @param imageUrl
+     */
+    public void addVideoAdTask(long time, String imageUrl) {
+        mVideoAdHolder.addVideoAdTask(time, imageUrl);
+    }
+
+    /**
      * Sets video path.
      *
      * @param path the path of the video.
@@ -270,6 +292,11 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             mMediaPlayer = null;
             if (mHudViewHolder != null)
                 mHudViewHolder.setMediaPlayer(null);
+
+            // 设置广告
+            if (mVideoAdHolder != null)
+                mVideoAdHolder.setMediaPlayer(null);
+
             mCurrentState = STATE_IDLE;
             mTargetState = STATE_IDLE;
             AudioManager am = (AudioManager) mAppContext.getSystemService(Context.AUDIO_SERVICE);
@@ -317,6 +344,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             mMediaPlayer.prepareAsync();
             if (mHudViewHolder != null)
                 mHudViewHolder.setMediaPlayer(mMediaPlayer);
+
+            // 设置广告
+            if (mVideoAdHolder != null)
+                mVideoAdHolder.setMediaPlayer(mMediaPlayer);
 
             // REMOVED: mPendingSubtitleTracks
 
@@ -1040,6 +1071,10 @@ public class IjkVideoView extends FrameLayout implements MediaController.MediaPl
             mMediaPlayer = MediaPlayerService.getMediaPlayer();
             if (mHudViewHolder != null)
                 mHudViewHolder.setMediaPlayer(mMediaPlayer);
+
+            // 设置广告
+            if (mVideoAdHolder != null)
+                mVideoAdHolder.setMediaPlayer(mMediaPlayer);
         }
     }
 

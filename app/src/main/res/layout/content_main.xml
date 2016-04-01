@@ -68,4 +68,15 @@
             android:text="甩屏"
             android:onClick="throwVideo"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            android:onClick="test"/>
+    </LinearLayout>
 </LinearLayout>
